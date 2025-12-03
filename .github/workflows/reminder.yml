@@ -1,0 +1,14 @@
+name: Weekly Reminder
+
+on:
+  schedule:
+    - cron: '0 14 * * 1'  # Every Monday at 2 PM UTC (adjust for your timezone)
+  workflow_dispatch:  # Allows manual testing
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send to Google Chat
+        run: |
+          curl -X POST '${{ secrets.CHAT_WEBHOOK }}' -H 'Content-Type: application/json' -d '{"text": "📅 Weekly reminder: Update Office Poll!"}'
