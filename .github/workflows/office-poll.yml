@@ -28,6 +28,6 @@ jobs:
               "messages": [{"role": "user", "content": "Generate a single short, cute greeting (max 10 words) relevant to the week of '"$WEEK_OF"'. Consider any holidays, seasons, or fun observances. Just the greeting, no quotes or explanation."}]
             }' | jq -r '.content[0].text')
           
-          curl -X POST 'https://chat.googleapis.com/v1/spaces/AAAA1YC0DNk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=PIGG48MS-NqZBr9k7yDF0SP8dvPxaTKlsZsavaRyzdc' \
+          curl -X POST 'https://chat.googleapis.com/v1/spaces/AAAAfpuiDvo/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=HBkuG8ch-i3UgeHUcupl7PT2iBFQX7gG6H91QzUB5zk' \
             -H 'Content-Type: application/json' \
             -d "{\"text\": \"🏢 Office Check-In\n\n$CUTE_MSG\n\nWhat day(s) are you planning to come in this week? React to all that apply!\n\n1️⃣ Monday ($MON)\n2️⃣ Tuesday ($TUE)\n3️⃣ Wednesday ($WED)\n4️⃣ Thursday ($THU)\n5️⃣ Friday ($FRI)\n\n🏠 = Working remote all week\"}"
