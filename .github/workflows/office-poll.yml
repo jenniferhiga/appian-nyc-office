@@ -1,53 +1,29 @@
 name: Weekly Office Poll
 
 on:
-
   schedule:
-
     - cron: '0 14 * * 0'  # Sunday 9 AM EST
-
   workflow_dispatch:
 
 jobs:
-
   send-poll:
-
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Get Wikipedia fact and send poll
-
         run: |
-
           MON=$(date -d "+1 day" +"%-m/%-d")
-
           TUE=$(date -d "+2 days" +"%-m/%-d")
-
           WED=$(date -d "+3 days" +"%-m/%-d")
-
           THU=$(date -d "+4 days" +"%-m/%-d")
-
           FRI=$(date -d "+5 days" +"%-m/%-d")
-
           
-
           MONTH=$(date -d "+1 day" +"%-m")
-
           DAY=$(date -d "+1 day" +"%-d")
-
           
-
           WIKI_FACT=$(curl -s "https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/$MONTH/$DAY" \
-
             -H "Accept: application/json" \
-
             | jq -r '.events[0] | "\(.year): \(.text)"')
-
           
-
           curl -X POST 'https://chat.googleapis.com/v1/spaces/AAAA1YC0DNk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=PIGG48MS-NqZBr9k7yDF0SP8dvPxaTKlsZsavaRyzdc' \
-
             -H 'Content-Type: application/json' \
-
             -d "{\"text\": \"🏢 Office Check-In\n\n📅 On this day: $WIKI_FACT\n\nWhat day(s) are you planning to come in this week? React to all that apply!\n\n1️⃣ Monday ($MON)\n2️⃣ Tuesday ($TUE)\n3️⃣ Wednesday ($WED)\n4️⃣ Thursday ($THU)\n5️⃣ Friday ($FRI)\n\n🏠 = Working remote all week\"}"
