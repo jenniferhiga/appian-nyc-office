@@ -1,33 +1,53 @@
 name: Weekly Office Poll
 
 on:
+
   schedule:
+
     - cron: '0 14 * * 0'  # Sunday 9 AM EST
+
   workflow_dispatch:
 
 jobs:
+
   send-poll:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Generate cute message and send poll
+
+      - name: Get Wikipedia fact and send poll
+
         run: |
+
           MON=$(date -d "+1 day" +"%-m/%-d")
+
           TUE=$(date -d "+2 days" +"%-m/%-d")
+
           WED=$(date -d "+3 days" +"%-m/%-d")
+
           THU=$(date -d "+4 days" +"%-m/%-d")
+
           FRI=$(date -d "+5 days" +"%-m/%-d")
-          WEEK_OF=$(date -d "+1 day" +"%B %-d, %Y")
+
           
-          CUTE_MSG=$(curl -s https://api.anthropic.com/v1/messages \
-            -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.ANTHROPIC_API_KEY }}" \
-            -H "anthropic-version: 2023-06-01" \
-            -d '{
-              "model": "claude-3-haiku-20240307",
-              "max_tokens": 100,
-              "messages": [{"role": "user", "content": "Generate a single short, cute greeting (max 10 words) relevant to the week of '"$WEEK_OF"'. Consider any holidays, seasons, or fun observances. Just the greeting, no quotes or explanation."}]
-            }' | jq -r '.content[0].text')
+
+          MONTH=$(date -d "+1 day" +"%-m")
+
+          DAY=$(date -d "+1 day" +"%-d")
+
           
-          curl -X POST 'https://chat.googleapis.com/v1/spaces/AAAAfpuiDvo/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=HBkuG8ch-i3UgeHUcupl7PT2iBFQX7gG6H91QzUB5zk' \
+
+          WIKI_FACT=$(curl -s "https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/$MONTH/$DAY" \
+
+            -H "Accept: application/json" \
+
+            | jq -r '.events[0] | "\(.year): \(.text)"')
+
+          
+
+          curl -X POST 'https://chat.googleapis.com/v1/spaces/AAAA1YC0DNk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=PIGG48MS-NqZBr9k7yDF0SP8dvPxaTKlsZsavaRyzdc' \
+
             -H 'Content-Type: application/json' \
-            -d "{\"text\": \"🏢 Office Check-In\n\n$CUTE_MSG\n\nWhat day(s) are you planning to come in this week? React to all that apply!\n\n1️⃣ Monday ($MON)\n2️⃣ Tuesday ($TUE)\n3️⃣ Wednesday ($WED)\n4️⃣ Thursday ($THU)\n5️⃣ Friday ($FRI)\n\n🏠 = Working remote all week\"}"
+
+            -d "{\"text\": \"🏢 Office Check-In\n\n📅 On this day: $WIKI_FACT\n\nWhat day(s) are you planning to come in this week? React to all that apply!\n\n1️⃣ Monday ($MON)\n2️⃣ Tuesday ($TUE)\n3️⃣ Wednesday ($WED)\n4️⃣ Thursday ($THU)\n5️⃣ Friday ($FRI)\n\n🏠 = Working remote all week\"}"
