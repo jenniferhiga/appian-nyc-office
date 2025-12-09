@@ -2,7 +2,7 @@ name: Weekly Reminder
 
 on:
   schedule:
-    - cron: '0 14 * * 1'  # Every Monday at 9am EST, may be a few minutes lag due to git cron
+    - cron: '0 14 * * 5'  # Every Friday at 9am EST, may be a few minutes lag due to git cron
   workflow_dispatch:  # Allows manual testing
 
 jobs:
